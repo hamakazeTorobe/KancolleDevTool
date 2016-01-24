@@ -5,6 +5,13 @@ package jp.gr.java_conf.hamakazeTorobe;
  */
 public class EquipList {
     //JSONとかにしたい
+    Object[] defaultSelection = {"-"};
+
+    Object[] rare = {
+            "レア度",
+            "1", "2", "3", "4", "5",
+    };
+
     Object[] equipCategory = {
             "装備の種類",
             "主砲", //1

@@ -5,9 +5,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.Observer;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 /**
  * Created by Tomoki on 2016/01/24.
@@ -35,7 +33,9 @@ public class KancolleTableController
 
         this.addButtonAction = new AbstractAction("追加")
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+
+            }
         };
         this.clearButtonAction = new AbstractAction("クリア")
         {
@@ -75,19 +75,31 @@ public class KancolleTableController
         };
         this.kaihatsuSuccessComboAction = new AbstractAction()
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(((JComboBox)e.getSource()).getSelectedIndex());
+                model.setSelectData("isSuccess",((JComboBox)e.getSource()).getSelectedIndex());
+                //model.comboBoxAction();
+            }
         };
         this.equipCategoryComboAction = new AbstractAction()
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                model.setSelectData("equipCategory",((JComboBox)e.getSource()).getSelectedIndex());
+                //model.comboBoxAction();
+            }
         };
         this.equipNamecomboAction = new AbstractAction()
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                model.setSelectData("equipName",((JComboBox)e.getSource()).getSelectedIndex());
+                //model.comboBoxAction();
+            }
         };
         this.equipRareComboAction = new AbstractAction()
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                model.comboBoxAction();
+            }
         };
     }
 

@@ -33,6 +33,21 @@ public class KancolleTableView
         implements Observer
 {
     private static final Object[] columnNames = { "試行回数", "結果", "種類", "装備", "レア度" };
+    private  final Object[] equipCategory = {
+            "装備の種類",
+            "主砲", //1
+            "主砲(対空砲)", //2
+            "副砲", //3
+            "魚雷", //4
+            "艦載機", //5
+            "電探", //6
+            "機関", //7
+            "砲弾", //8
+            "ソナー", //9
+            "爆雷", //10
+            "対空機銃", //11
+            "その他", //12
+    };
     private final Object[] DevSuccess = { "成功", "失敗" };
     private final Object[] Rare = { "レア度", "1", "2", "3", "4", "5" };
     private static JPanel panel;
@@ -100,9 +115,9 @@ public class KancolleTableView
 
         Object[] def = { "-" };
         cbm0 = new DefaultComboBoxModel(this.DevSuccess);
-
+        cbm1 = new DefaultComboBoxModel(this.equipCategory);
         cbm2 = new DefaultComboBoxModel(def);
-        cbm3 = new DefaultComboBoxModel(this.Rare);
+        cbm3 = new DefaultComboBoxModel(def);
 
         kaihatsuSuccessCombo = new JComboBox();
         kaihatsuSuccessCombo.setAction(controller.kaihatsuSuccessComboAction);
@@ -110,6 +125,7 @@ public class KancolleTableView
 
         equipCategoryCombo = new JComboBox();
         equipCategoryCombo.setAction(controller.equipCategoryComboAction);
+        equipCategoryCombo.setModel(cbm1);
 
         equipNameCombo = new JComboBox();
         equipNameCombo.setAction(controller.equipNamecomboAction);
@@ -192,16 +208,21 @@ public class KancolleTableView
     public void update(Observable o, Object arg)
     {
         System.out.println("*start update*");
+        updateFileInfo(o,arg);
+        //updateAllCombobox(o,arg);
 
-        String[] fileInfo = ((KancolleTableModel)o).getFileInfo();
-        for (String a : fileInfo) {
-            System.out.println(a);
+        //変更があったもの以外のコンボボックスを更新
+        if(((KancolleTableModel)o).isComboChange[0]){ //開発成否の更新がある場合
+            updateEquipCatgoryCombo(o,arg);
+            updateEquipNameCombo(o,arg);
+            updateRareCombo(o,arg);
         }
-        filenameField.setText(fileInfo[0]);
-        flagshipField.setText(fileInfo[1]);
-        flagshipLvField.setText(fileInfo[2]);
-        for (int i = 0; i < ((KancolleTableModel)o).getAllRecord().size(); i++) {
-            System.out.println(((KancolleTableModel)o).getAllRecord().get(i));
+        if(((KancolleTableModel)o).isComboChange[1]){ //カテゴリ名の更新がある場合
+            updateEquipNameCombo(o,arg);
+            updateRareCombo(o,arg);
+        }
+        if(((KancolleTableModel)o).isComboChange[2]){ //装備名の更新がある場合
+            updateRareCombo(o,arg);
         }
     }
 
@@ -219,5 +240,34 @@ public class KancolleTableView
         dataText.append(calcedData[1].toString());
         dataText.append("\n------装備名------\n");
         dataText.append(calcedData[2].toString());
+    }
+
+    private void updateFileInfo(Observable o, Object arg) {
+        String[] fileInfo = ((KancolleTableModel)o).getFileInfo();
+        for (String a : fileInfo) {
+            System.out.println(a);
+        }
+        filenameField.setText(fileInfo[0]);
+        flagshipField.setText(fileInfo[1]);
+        flagshipLvField.setText(fileInfo[2]);
+        for (int i = 0; i < ((KancolleTableModel)o).getAllRecord().size(); i++) {
+            System.out.println(((KancolleTableModel)o).getAllRecord().get(i));
+        }
+    }
+
+    private void updateAllCombobox(Observable o,Object arg){
+        equipCategoryCombo.setModel(((KancolleTableModel)o).getEquipCategoryCBM());
+        equipNameCombo.setModel(((KancolleTableModel)o).getEquipNameCBM());
+        rareCombo.setModel(((KancolleTableModel)o).getEquipRareCBM());
+    }
+
+    private void updateEquipCatgoryCombo(Observable o, Object arg){
+        equipCategoryCombo.setModel(((KancolleTableModel)o).getEquipCategoryCBM());
+    }
+    private void updateEquipNameCombo(Observable o, Object arg){
+        equipNameCombo.setModel(((KancolleTableModel)o).getEquipNameCBM());
+    }
+    private void updateRareCombo(Observable o, Object arg) {
+        rareCombo.setModel(((KancolleTableModel)o).getEquipRareCBM());
     }
 }
