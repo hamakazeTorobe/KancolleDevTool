@@ -21,7 +21,11 @@ public class KancolleTableController
     Action readButtonAction;
     Action writeButtonAction;
     Action exitButtonAction;
+
     Action filenameFieldAction;
+    Action flagshipNameFieldAction;
+    Action flagshipLvFieldAction;
+
     Action kaihatsuSuccessComboAction;
     Action equipCategoryComboAction;
     Action equipNamecomboAction;
@@ -71,8 +75,24 @@ public class KancolleTableController
         };
         this.filenameFieldAction = new AbstractAction()
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                model.setFilename(((JTextField)e.getSource()).getText());
+            }
         };
+
+        this.flagshipNameFieldAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.setFlagShipName(((JTextField)e.getSource()).getText());
+            }
+        };
+        this.flagshipLvFieldAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                model.setFlagShipLv(((JTextField)e.getSource()).getText());
+            }
+        };
+
         this.kaihatsuSuccessComboAction = new AbstractAction()
         {
             public void actionPerformed(ActionEvent e) {

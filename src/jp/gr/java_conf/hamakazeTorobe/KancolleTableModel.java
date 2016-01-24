@@ -15,7 +15,7 @@ import javax.swing.table.DefaultTableModel;
 public class KancolleTableModel
         extends Observable
 {
-    final String[] infoArray = { "FileName", "FlagShipName", "FlagShipLevel" };
+    final String[] infoArray = { "FileName", "FlagShipName", "FlagShipLv" };
     String[] fileInfo = new String[this.infoArray.length];
     ArrayList<String> dataList = new ArrayList();
     EquipList equipList = new EquipList();
@@ -35,6 +35,16 @@ public class KancolleTableModel
     {
         this.recordList.add(record);
         notifyObservers();
+    }
+
+    public void setFilename(String filename){
+        fileInfo[0] = filename;
+    }
+    public void setFlagShipName(String shipname){
+        fileInfo[1] = shipname;
+    }
+    public void setFlagShipLv(String shipLv){
+        fileInfo[2] = shipLv;
     }
 
     public DefaultComboBoxModel getEquipCategoryCBM(){

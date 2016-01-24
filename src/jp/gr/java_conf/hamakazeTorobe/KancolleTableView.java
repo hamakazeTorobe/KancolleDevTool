@@ -162,10 +162,10 @@ public class KancolleTableView
         filenameField.addActionListener(controller.filenameFieldAction);
         JLabel flagshipName = new JLabel("旗艦");
         flagshipField = new JTextField();
-        flagshipField.addActionListener(controller.filenameFieldAction);
+        flagshipField.addActionListener(controller.flagshipNameFieldAction);
         JLabel flagshipLv = new JLabel("旗艦Lv");
         flagshipLvField = new JTextField();
-        flagshipLvField.addActionListener(controller.filenameFieldAction);
+        flagshipLvField.addActionListener(controller.flagshipLvFieldAction);
 
         filePanel.add(fileLabel);
         filePanel.add(filenameField);
