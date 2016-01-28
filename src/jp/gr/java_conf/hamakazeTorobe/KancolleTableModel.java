@@ -1,9 +1,6 @@
 package jp.gr.java_conf.hamakazeTorobe;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Observable;
 import javax.swing.*;
@@ -33,7 +30,7 @@ public class KancolleTableModel
 
     int[] comboIndexList = {0,0,0,0};
 
-    Object[] record = {"-","-","-","-"};
+    Object[] record = {"成功","-","-","-"};
 
     public KancolleTableModel(){
         isSuccessCBM = new DefaultComboBoxModel(DevSuccess);
@@ -117,6 +114,38 @@ public class KancolleTableModel
         notifyObservers();
     }
 
+    public void fileWrite(String filename){
+        try {
+            PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+            String lineW;
+
+            for (int i = 0; i < 3; i++) {//開発レシピ＆旗艦データ書き出し
+                writer.println(fileInfo[i]);
+            }
+
+            for (int i = 0; i < recordTableModel.getRowCount(); i++) {
+                lineW = "";
+                for (int j = 0; j < columnNames.length; j++) {
+
+                    if (recordTableModel.getValueAt(i, j) != null)
+                        lineW += recordTableModel.getValueAt(i, j);
+                    else
+                        lineW = "";
+
+                    if (j != columnNames.length - 1)
+                        lineW += ",";
+                }
+                //System.out.println(lineW);
+                writer.println(lineW);
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println(e + ":::write");
+        }
+    }
+
     public String[] getFileInfo()
     {
         return this.fileInfo;
@@ -137,7 +166,18 @@ public class KancolleTableModel
         for(int i = 0; i < isComboChange.length;i++)isComboChange[i] = false;
         if(cbmName == "isSuccess"){
             comboIndexList[0] = selectedIndex;
-            record[0] = isSuccessCBM.getElementAt(selectedIndex);
+            record[0] = DevSuccess[selectedIndex];
+            if(selectedIndex == 1) {
+                record[1] = "-";
+                record[2] = "-";
+                record[3] = "-";
+            }else{
+
+                record[1] = equipCategoryCBM.getIndexOf(0);
+                record[2] = "-";
+                record[3] = "-";
+            }
+
            isComboChange[0] = true;
         }
         else if(cbmName == "equipCategory"){

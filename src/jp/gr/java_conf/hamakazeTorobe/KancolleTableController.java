@@ -72,7 +72,19 @@ public class KancolleTableController
         };
         this.writeButtonAction = new AbstractAction("Save")
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser(".");
+                fileChooser.setFileSelectionMode(0);
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle("保存");
+
+                int ret = fileChooser.showSaveDialog(null);
+                if (ret != JFileChooser.APPROVE_OPTION) {
+                    return;
+                }
+                logFilename = fileChooser.getSelectedFile().getAbsolutePath();
+                model.fileWrite(KancolleTableController.this.logFilename);
+            }
         };
         this.exitButtonAction = new AbstractAction("Exit")
         {
