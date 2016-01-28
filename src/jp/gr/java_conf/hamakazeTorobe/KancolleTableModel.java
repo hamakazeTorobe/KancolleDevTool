@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,12 +15,16 @@ import javax.swing.table.DefaultTableModel;
 public class KancolleTableModel
         extends Observable
 {
-    final String[] infoArray = { "FileName", "FlagShipName", "FlagShipLv" };
+    private final String[] infoArray = { "FileName", "FlagShipName", "FlagShipLv" };
+    private final String[] columnNames = {"試行回数","結果","種類","装備","レア度"};
+    private final Object[] DevSuccess = { "成功", "失敗" };
+
     String[] fileInfo = new String[this.infoArray.length];
     ArrayList<String> dataList = new ArrayList();
     EquipList equipList = new EquipList();
     ArrayList<KanDevRecord> recordList = new ArrayList();
     DefaultTableModel recordTableModel;
+    DefaultComboBoxModel isSuccessCBM;
     DefaultComboBoxModel equipCategoryCBM;
     DefaultComboBoxModel equipNameCBM;
     DefaultComboBoxModel equipRareCBM;
@@ -29,11 +33,24 @@ public class KancolleTableModel
 
     int[] comboIndexList = {0,0,0,0};
 
-    Object[] record = {"","","",""};
+    Object[] record = {"-","-","-","-"};
 
-    public void addData(KanDevRecord record)
+    public KancolleTableModel(){
+        isSuccessCBM = new DefaultComboBoxModel(DevSuccess);
+        recordTableModel = new DefaultTableModel();
+    }
+
+    public void addData()
     {
-        this.recordList.add(record);
+        this.recordList.add(
+                new KanDevRecord(
+                        record[0].toString(),
+                        record[1].toString(),
+                        record[2].toString(),
+                        record[3].toString())
+        );
+        setTableData(recordList);
+        setChanged();
         notifyObservers();
     }
 
@@ -86,6 +103,8 @@ public class KancolleTableModel
             in.close();
         }
         catch (FileNotFoundException e) {}catch (IOException e) {}catch (ArrayIndexOutOfBoundsException e) {}
+        setTableData(recordList);
+
         setChanged();
         notifyObservers();
     }
@@ -110,18 +129,25 @@ public class KancolleTableModel
         for(int i = 0; i < isComboChange.length;i++)isComboChange[i] = false;
         if(cbmName == "isSuccess"){
             comboIndexList[0] = selectedIndex;
+            record[0] = isSuccessCBM.getElementAt(selectedIndex);
             isComboChange[0] = true;
         }
         else if(cbmName == "equipCategory"){
             comboIndexList[1] = selectedIndex;
+            record[1] = equipCategoryCBM.getElementAt(selectedIndex);
+            record[2] = "-";
+            record[3] = "-";
             isComboChange[1] = true;
         }
         else if(cbmName == "equipName"){
             comboIndexList[2] = selectedIndex;
+            record[2] = equipNameCBM.getElementAt(selectedIndex);
+            record[3] = "-";
             isComboChange[2] = true;
         }
         else if(cbmName == "equipRare"){
             comboIndexList[3] = selectedIndex;
+            record[3] = equipRareCBM.getElementAt(selectedIndex);
             isComboChange[3] = true;
         }
         else{
@@ -173,5 +199,20 @@ public class KancolleTableModel
         else{
             return equipList.defaultSelection;
         }
+    }
+
+    private void setTableData(ArrayList<KanDevRecord> recList) {
+
+        String[][] tableData = new String[recList.size()][columnNames.length];
+        for (int i = 0; i < recList.size(); i++) {
+            for (int j = 0; j < columnNames.length - 1; j++) {
+                if (j == 0) tableData[i][0] = Integer.toString(i + 1); //試行回数カウント
+                tableData[i][j + 1] = recList.get(i).getRecord()[j].toString();//のこり4つのデータ追加
+            }
+        }
+        recordTableModel = new DefaultTableModel(tableData, columnNames);
+    }
+    public DefaultTableModel getRecordTableModel(){
+        return this.recordTableModel;
     }
 }

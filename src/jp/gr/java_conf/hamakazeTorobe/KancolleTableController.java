@@ -38,7 +38,7 @@ public class KancolleTableController
         this.addButtonAction = new AbstractAction("追加")
         {
             public void actionPerformed(ActionEvent e) {
-
+                model.addData();
             }
         };
         this.clearButtonAction = new AbstractAction("クリア")
@@ -96,7 +96,7 @@ public class KancolleTableController
         this.kaihatsuSuccessComboAction = new AbstractAction()
         {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(((JComboBox)e.getSource()).getSelectedIndex());
+                //System.out.println(((JComboBox)e.getSource()).getSelectedIndex());
                 model.setSelectData("isSuccess",((JComboBox)e.getSource()).getSelectedIndex());
                 //model.comboBoxAction();
             }
@@ -118,7 +118,8 @@ public class KancolleTableController
         this.equipRareComboAction = new AbstractAction()
         {
             public void actionPerformed(ActionEvent e) {
-                model.comboBoxAction();
+                model.setSelectData("equipRare",((JComboBox)e.getSource()).getSelectedIndex());
+                //model.comboBoxAction();
             }
         };
     }

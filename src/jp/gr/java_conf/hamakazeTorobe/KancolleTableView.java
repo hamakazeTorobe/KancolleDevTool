@@ -207,27 +207,16 @@ public class KancolleTableView
 
     public void update(Observable o, Object arg)
     {
-        System.out.println("*start update*");
+        //System.out.println("*start update*");
         updateFileInfo(o,arg);
-        //updateAllCombobox(o,arg);
+        updateAllCombobox(o,arg);
+        updateTable(((KancolleTableModel)o).getRecordTableModel());
 
-        //変更があったもの以外のコンボボックスを更新
-        if(((KancolleTableModel)o).isComboChange[0]){ //開発成否の更新がある場合
-            updateEquipCatgoryCombo(o,arg);
-            updateEquipNameCombo(o,arg);
-            updateRareCombo(o,arg);
-        }
-        if(((KancolleTableModel)o).isComboChange[1]){ //カテゴリ名の更新がある場合
-            updateEquipNameCombo(o,arg);
-            updateRareCombo(o,arg);
-        }
-        if(((KancolleTableModel)o).isComboChange[2]){ //装備名の更新がある場合
-            updateRareCombo(o,arg);
-        }
     }
 
-    private void tableUpdate(DefaultTableModel defaultTableModel)
+    private void updateTable(DefaultTableModel tableModel)
     {
+        table.setModel(tableModel);
         table.clearSelection();
     }
 
@@ -256,9 +245,19 @@ public class KancolleTableView
     }
 
     private void updateAllCombobox(Observable o,Object arg){
-        equipCategoryCombo.setModel(((KancolleTableModel)o).getEquipCategoryCBM());
-        equipNameCombo.setModel(((KancolleTableModel)o).getEquipNameCBM());
-        rareCombo.setModel(((KancolleTableModel)o).getEquipRareCBM());
+        //変更があったもの以外のコンボボックスを更新
+        if(((KancolleTableModel)o).isComboChange[0]){ //開発成否の更新がある場合
+            updateEquipCatgoryCombo(o,arg);
+            updateEquipNameCombo(o,arg);
+            updateRareCombo(o,arg);
+        }
+        if(((KancolleTableModel)o).isComboChange[1]){ //カテゴリ名の更新がある場合
+            updateEquipNameCombo(o,arg);
+            updateRareCombo(o,arg);
+        }
+        if(((KancolleTableModel)o).isComboChange[2]){ //装備名の更新がある場合
+            updateRareCombo(o,arg);
+        }
     }
 
     private void updateEquipCatgoryCombo(Observable o, Object arg){
