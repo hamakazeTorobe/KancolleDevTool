@@ -43,7 +43,15 @@ public class KancolleTableController
         };
         this.clearButtonAction = new AbstractAction("クリア")
         {
-            public void actionPerformed(ActionEvent e) {}
+            public void actionPerformed(ActionEvent e) {
+
+                Object[] msg = { "本当にクリアしてもよろしいですか？" };
+                int ans = JOptionPane.showConfirmDialog(((JButton)e.getSource()), msg);
+                if (ans == 0) {
+                    model.clearRecord();
+                }
+
+            }
         };
         this.readButtonAction = new AbstractAction("read")
         {

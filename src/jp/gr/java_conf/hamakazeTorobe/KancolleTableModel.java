@@ -37,7 +37,14 @@ public class KancolleTableModel
 
     public KancolleTableModel(){
         isSuccessCBM = new DefaultComboBoxModel(DevSuccess);
+        equipCategoryCBM  = new DefaultComboBoxModel(equipList.equipCategory);
+        equipNameCBM = new DefaultComboBoxModel(equipList.defaultSelection);
+        equipRareCBM = new DefaultComboBoxModel(equipList.defaultSelection);
+
         recordTableModel = new DefaultTableModel();
+
+        setChanged();
+        notifyObservers();
     }
 
     public void addData()
@@ -84,6 +91,7 @@ public class KancolleTableModel
         try
         {
             this.recordList.clear();
+
             BufferedReader in = new BufferedReader(new FileReader(filename));
             for (int i = 0; i < 3; i++)
             {
@@ -130,7 +138,7 @@ public class KancolleTableModel
         if(cbmName == "isSuccess"){
             comboIndexList[0] = selectedIndex;
             record[0] = isSuccessCBM.getElementAt(selectedIndex);
-            isComboChange[0] = true;
+           isComboChange[0] = true;
         }
         else if(cbmName == "equipCategory"){
             comboIndexList[1] = selectedIndex;
@@ -214,5 +222,15 @@ public class KancolleTableModel
     }
     public DefaultTableModel getRecordTableModel(){
         return this.recordTableModel;
+    }
+
+    public void clearRecord(){
+        //record = new Object[]{"-","-","-","-"};
+        fileInfo = new String[]{"","",""};
+        recordList.clear();
+        dataList.clear();
+        recordTableModel = new DefaultTableModel();
+        setChanged();
+        notifyObservers();
     }
 }

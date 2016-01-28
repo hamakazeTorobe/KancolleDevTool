@@ -122,17 +122,22 @@ public class KancolleTableView
         kaihatsuSuccessCombo = new JComboBox();
         kaihatsuSuccessCombo.setAction(controller.kaihatsuSuccessComboAction);
         kaihatsuSuccessCombo.setModel(cbm0);
+        kaihatsuSuccessCombo.setSelectedIndex(0);
 
         equipCategoryCombo = new JComboBox();
         equipCategoryCombo.setAction(controller.equipCategoryComboAction);
         equipCategoryCombo.setModel(cbm1);
+        equipCategoryCombo.setSelectedIndex(0);
 
         equipNameCombo = new JComboBox();
         equipNameCombo.setAction(controller.equipNamecomboAction);
         equipNameCombo.setModel(cbm2);
+        equipNameCombo.setSelectedIndex(0);
+
         rareCombo = new JComboBox();
         rareCombo.setAction(controller.equipRareComboAction);
         rareCombo.setModel(cbm3);
+        rareCombo.setSelectedIndex(0);
 
         JPanel panel3 = new JPanel();
         panel3.setLayout(new BorderLayout());
@@ -216,6 +221,7 @@ public class KancolleTableView
 
     private void updateTable(DefaultTableModel tableModel)
     {
+        //table = new JTable();
         table.setModel(tableModel);
         table.clearSelection();
     }
