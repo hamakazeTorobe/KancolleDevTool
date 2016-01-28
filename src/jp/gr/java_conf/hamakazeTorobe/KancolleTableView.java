@@ -1,6 +1,5 @@
 package jp.gr.java_conf.hamakazeTorobe;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,15 +71,6 @@ public class KancolleTableView
     private static JTextField flagshipLvField;
     private static String filename = "null";
     private static String[] firstLine = new String[3];
-    private static TreeSet set = new TreeSet();
-    private static HashMap<String, Float> failureProb;
-    private static HashMap<String, Float> categoryProb;
-    private static HashMap<String, Float> equipProb;
-    private static HashMap<String, Float> rareProb;
-    private static ArrayList<String> failureProbKeyList;
-    private static ArrayList<String> categoryProbKeyList;
-    private static ArrayList<String> equipProbKeyList;
-    private static ArrayList<String> rareProbKeyList;
     private static JTextArea dataText;
     private static JButton clear;
 
@@ -92,16 +82,6 @@ public class KancolleTableView
 
         model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
-
-        failureProb = new HashMap();
-        categoryProb = new HashMap();
-        equipProb = new HashMap();
-        rareProb = new HashMap();
-
-        failureProbKeyList = new ArrayList();
-        categoryProbKeyList = new ArrayList();
-        equipProbKeyList = new ArrayList();
-        rareProbKeyList = new ArrayList();
 
         JScrollPane scroll = new JScrollPane(table);
         panel = (JPanel)getContentPane();
@@ -216,6 +196,7 @@ public class KancolleTableView
         updateFileInfo(o,arg);
         updateAllCombobox(o,arg);
         updateTable(((KancolleTableModel)o).getRecordTableModel());
+        updateAnalysis(o,arg);
 
     }
 
@@ -224,17 +205,14 @@ public class KancolleTableView
         //table = new JTable();
         table.setModel(tableModel);
         table.clearSelection();
-    }
+        try {
+            table.addRowSelectionInterval(tableModel.getRowCount() - 1, tableModel.getRowCount() - 1);
+            int srtv = table.convertRowIndexToView(tableModel.getRowCount() - 1);
+            Rectangle rect = table.getCellRect(srtv, 0, true);
+            table.scrollRectToVisible(rect);
+        }catch(Exception e){
 
-    private void calcUpdate(Object[] calcedData)
-    {
-        dataText.setText("");
-        dataText.append("------レア度------\n");
-        dataText.append(calcedData[0].toString());
-        dataText.append("\n------種類------\n");
-        dataText.append(calcedData[1].toString());
-        dataText.append("\n------装備名------\n");
-        dataText.append(calcedData[2].toString());
+        }
     }
 
     private void updateFileInfo(Observable o, Object arg) {
@@ -274,5 +252,25 @@ public class KancolleTableView
     }
     private void updateRareCombo(Observable o, Object arg) {
         rareCombo.setModel(((KancolleTableModel)o).getEquipRareCBM());
+    }
+
+    public static void updateAnalysis(Observable o, Object arg) {
+        KancolleTableModel kanTable = (KancolleTableModel)o;
+        dataText.setText("");
+        dataText.append("------レア度------\n");
+        //dataText.append("失敗  " +failureProb.get("失敗")+"%\n");
+        for (int i = 0; i < kanTable.rareProbKeyList.size(); i++) {
+            dataText.append(kanTable.rareProbKeyList.get(i) + "  " + kanTable.rareProb.get(kanTable.rareProbKeyList.get(i)) + "%\n");
+        }
+        //dataText.append("その他  \n" +rareProb.get("1")+"%\n");
+        dataText.append("\n------種類------\n");
+        for (int i = 0; i < kanTable.categoryProbKeyList.size(); i++) {
+            dataText.append(kanTable.categoryProbKeyList.get(i) + "  " + kanTable.categoryProb.get(kanTable.categoryProbKeyList.get(i)) + "%\n");
+        }
+        dataText.append("\n------装備名------\n");
+        for (int i = 0; i < kanTable.equipProbKeyList.size(); i++) {
+            dataText.append(kanTable.equipProbKeyList.get(i) + "  " + (int) (float) kanTable.equipProb.get(kanTable.equipProbKeyList.get(i))
+                    + "個\n");
+        }
     }
 }

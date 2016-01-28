@@ -9,7 +9,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        JFrame frame = new KancolleTableView("Yarimashita", new KancolleTableController(new KancolleTableModel()));
+        JFrame frame = new KancolleTableView("リファクタリングやりました", new KancolleTableController(new KancolleTableModel()));
         frame.setDefaultCloseOperation(3);
         frame.setSize(900, 600);
         frame.setVisible(true);

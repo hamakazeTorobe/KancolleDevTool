@@ -2,7 +2,9 @@ package jp.gr.java_conf.hamakazeTorobe;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
+import java.util.TreeSet;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -32,6 +34,13 @@ public class KancolleTableModel
 
     Object[] record = {"成功","-","-","-"};
 
+    /*----------------------------------------*/
+    TreeSet set = new TreeSet();
+    HashMap<String, Float> failureProb, categoryProb, equipProb, rareProb;
+    ArrayList<String> failureProbKeyList, categoryProbKeyList, equipProbKeyList, rareProbKeyList;
+    JTextArea dataText;
+    /*----------------------------------------*/
+
     public KancolleTableModel(){
         isSuccessCBM = new DefaultComboBoxModel(DevSuccess);
         equipCategoryCBM  = new DefaultComboBoxModel(equipList.equipCategory);
@@ -40,6 +49,18 @@ public class KancolleTableModel
 
         recordTableModel = new DefaultTableModel();
 
+        /*----------------------------------------*/
+        failureProb = new HashMap<String, Float>();
+        categoryProb = new HashMap<String, Float>();
+        equipProb = new HashMap<String, Float>();
+        rareProb = new HashMap<String, Float>();
+
+        failureProbKeyList = new ArrayList<String>();
+        categoryProbKeyList = new ArrayList<String>();
+        equipProbKeyList = new ArrayList<String>();
+        rareProbKeyList = new ArrayList<String>();
+
+        /*----------------------------------------*/
         setChanged();
         notifyObservers();
     }
@@ -88,7 +109,6 @@ public class KancolleTableModel
         try
         {
             this.recordList.clear();
-
             BufferedReader in = new BufferedReader(new FileReader(filename));
             for (int i = 0; i < 3; i++)
             {
@@ -135,7 +155,6 @@ public class KancolleTableModel
                     if (j != columnNames.length - 1)
                         lineW += ",";
                 }
-                //System.out.println(lineW);
                 writer.println(lineW);
             }
             writer.close();
@@ -149,17 +168,6 @@ public class KancolleTableModel
     public String[] getFileInfo()
     {
         return this.fileInfo;
-    }
-
-    public ArrayList<String> getDataList()
-    {
-        return this.dataList;
-    }
-
-
-    public void comboBoxAction(){
-        setChanged();
-        notifyObservers();
     }
 
     public void setSelectData(String cbmName,int selectedIndex){
@@ -259,6 +267,10 @@ public class KancolleTableModel
             }
         }
         recordTableModel = new DefaultTableModel(tableData, columnNames);
+        for(int i = 0; i < columnNames.length;i++) {
+            setDataAnalysis(i);
+        }
+
     }
     public DefaultTableModel getRecordTableModel(){
         return this.recordTableModel;
@@ -270,7 +282,79 @@ public class KancolleTableModel
         recordList.clear();
         dataList.clear();
         recordTableModel = new DefaultTableModel();
+
+        for(int i = 0; i < columnNames.length;i++) {
+            setDataAnalysis(i);
+        }
+
         setChanged();
         notifyObservers();
+    }
+
+    public void setDataAnalysis(int columnNum){
+        for (int i = 0; i < recordList.size(); i++) {
+            set.add(recordList.get(i).getIndexObject(columnNum));
+        }
+        int Ssize = set.size();
+        int[] setCount = new int[Ssize];
+        String[] dataName = new String[Ssize];
+        for (int j = 0; j < Ssize; j++) {
+            dataName[j] = (String) set.first();
+            for (int k = 0; k < recordList.size(); k++) {
+                if (recordList.get(k).getIndexObject(columnNum).equals(dataName[j])) {
+                    setCount[j]++;
+                }
+            }
+            set.pollFirst();
+        }
+        switch (columnNum) {
+            case 1://成功失敗
+                failureProbKeyList.clear();
+                failureProb.clear();
+                for (int i = 0; i < dataName.length; i++) {
+                    if (dataName[i].contains("-"))
+                        continue;
+                    failureProbKeyList.add(dataName[i]);
+                    Float prob = (float) 100 * ((float) setCount[i] / (float) recordList.size());
+                    failureProb.put(dataName[i], prob);
+                }
+                break;
+            case 2://装備の種類
+                categoryProbKeyList.clear();
+                categoryProb.clear();
+                for (int i = 0; i < dataName.length; i++) {
+                    if (dataName[i].contains("-"))
+                        continue;
+                    categoryProbKeyList.add(dataName[i]);
+                    //System.out.println(categoryProbKeyList);
+                    Float prob = (float) 100 * ((float) setCount[i] / (float) recordList.size());
+                    categoryProb.put(dataName[i], prob);
+                }
+                break;
+            case 3://装備名
+                equipProbKeyList.clear();
+                equipProb.clear();
+                for (int i = 0; i < dataName.length; i++) {
+                    if (dataName[i].contains("-"))
+                        continue;
+                    equipProbKeyList.add(dataName[i]);
+                    Float count = (float) setCount[i];
+                    equipProb.put(dataName[i], count);
+                }
+                break;
+
+            case 4://レア度
+                rareProbKeyList.clear();
+                rareProb.clear();
+                for (int i = 0; i < dataName.length; i++) {
+                    if (dataName[i].contains("-")) {
+                        dataName[i] = "失敗";
+                    }
+                    rareProbKeyList.add(dataName[i]);
+                    Float prob = (float) 100 * ((float) setCount[i] / (float) recordList.size());
+                    rareProb.put(dataName[i], prob);
+                }
+                break;
+        }
     }
 }

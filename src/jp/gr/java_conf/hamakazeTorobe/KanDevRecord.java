@@ -38,6 +38,20 @@ public class KanDevRecord
         return this.rare;
     }
 
+    public String getIndexObject(int index){
+        if(index == 1) {
+            return this.isSuccess;
+        }else if(index == 2) {
+            return this.name;
+        }else if(index == 3) {
+            return this.category;
+        }else if(index == 4){
+            return this.rare;
+        }else{
+            return "error";
+        }
+    };
+
     public Object[] getRecord()
     {
         Object[] record = new Object[4];
